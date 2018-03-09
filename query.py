@@ -1,16 +1,18 @@
 import json
-from word_frequencies import Text
-import tf_idf as ti
+from .word_frequencies import Text
+from . import tf_idf as ti
 import sys
+import os
 import math
 import heapq
 from collections import defaultdict
 
 class search_engine():
 	def __init__(self):
-		with open('index.json', 'r') as f:
+		print(os.getcwd())
+		with open('../IRproject/search/index.json', 'r') as f:
 			self.index = json.loads(f.read())
-		self.path = 'WEBPAGES_CLEAN/'
+		self.path = '../IRproject/search/WEBPAGES_CLEAN/'
 		with open(self.path + 'bookkeeping.json', 'r') as f:
 			json_str = f.read()
 			self.bookkeeping = json.loads(json_str)
@@ -31,6 +33,7 @@ class search_engine():
 
 	def query(self, string):
 		keywords = Text(None, string).computeWordFrequencies()
+		print ("keywords is ", string , keywords)
 		L = len(keywords)
 		query_score = 1
 		query_vec = [0] * len(keywords)
@@ -47,12 +50,16 @@ class search_engine():
 				pass
 		#ranked_hits = heapq.nlargest(5, hits, key = lambda posting : self.cosine_similarity(query_vec, hits[posting]))
 		ranked_hits = heapq.nlargest(5, hits, key = lambda posting : sum(hits[posting]))
+		#print(hits)
 		ranked_snippet_position = [snippet_position[hit] for hit in ranked_hits]
 		ranked_snippet = []
+
+		print (ranked_hits)
 		for i, hit in enumerate(ranked_hits):
 			snippet = []
 			content = Text(self.path + hit).tokenize()
 			for pos in ranked_snippet_position[i][:2]: #limit to 2 here. need to modify
+				print("post",i, pos)
 				snippet.append(content[pos-15:pos+15] if pos >= 15 else content[0:pos+15])
 			ranked_snippet.append(snippet)
 
@@ -69,10 +76,11 @@ if __name__ == '__main__':
 			print('Type a query:')
 			query = input()
 			print()
-			hits, snippets = se.query(query)
+			hits, snippets = se.query(query)      #
 			for i in range(len(hits)):
-				print(hits[i])
+				print(i, hits[i])
 				for snippet in snippets[i][:2]:
+		
 					print(' '.join(snippet))
 				print('---------------------------------------')
 			print()

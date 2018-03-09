@@ -1,4 +1,4 @@
-import fire
+#import fire
 import re
 from collections import Counter
 from collections import defaultdict
@@ -31,5 +31,5 @@ class Text:
 	def run(self):
 		self.printFrequencies()
 
-if __name__ == '__main__':
-	fire.Fire(Text)
+#if __name__ == '__main__':
+	#fire.Fire(Text)

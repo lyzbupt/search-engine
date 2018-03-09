@@ -1,5 +1,5 @@
 import os
-from word_frequencies import Text
+from .word_frequencies import Text
 import json
 from collections import defaultdict
 import tf_idf as ti
